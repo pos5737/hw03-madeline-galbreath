@@ -130,11 +130,20 @@ df8 <- mutate(df7, across("oecd_member", str_replace, "10", "Member"),
               across("party_fam", str_replace, "20", "Leftist"),
               across("party_fam", str_replace, "10", "Ecological"))
 
-#Final Glimpse
-glimpse(df8)
+#Glimpse once more
+glimpse(df9)
+
+#One Last Missed Removal
+df9 = subset(df8, select = -c(prog_type))
+
+#Correct typo
+df10 <- rename(df9, democracy = demcoracy)
+
+#Final glimpse
+glimpse(df10)
 
 #Save the tidier dataset as .rds and .csv files
-write_rds(df8,
+write_rds(df10,
           "data/manifesto_tidy.rds")
-write_csv(df8,
+write_csv(df10,
           "data/manifesto_tidy.csv")
