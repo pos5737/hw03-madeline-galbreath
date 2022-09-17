@@ -31,7 +31,6 @@ df5 <- rename(df4, country_name = countryname,
               party_abbrev = partyabbrev,
               party_fam = parfam,
               percent_vote = pervote,
-              vote_estim = voteest,
               absol_seats = absseat,
               total_seats = totseats,
               prog_type = progtype,
@@ -98,19 +97,44 @@ df5 <- rename(df4, country_name = countryname,
               int_peace = intpeace)
 
 #Remove more missed columns
-df6 = subset(df5, select = -c(vote_estim, date))
+df6 = subset(df5, select = -c(date))
               
 #See the new data frame
 glimpse(df6)
 view(df6)
 
-#Convert election_date dates into YYYY-MM-DD form
+#Attempt to convert election_date dates into YYYY-MM-DD form
 df7 <- mutate(df6, election_date = str_replace(election_date,
                                    pattern= "\\b(?<day>\\d{1,2})/(?<month>\\d{1,2})/(?<year>\\d{2,4})\\b",
                                    replacement= "\\${year}-\\${month}-\\${day}"))
 
 #Review the attempt
-view(df8)
+view(df7)
 
+#Convert inconvenient number codes to strings
+df8 <- mutate(df7, across("oecd_member", str_replace, "10", "Member"),
+              across("oecd_member", str_replace, "0", "Non-member"),
+              across("eu_member", str_replace, "20", "Applicant"),
+              across("eu_member", str_replace, "10", "Member"),
+              across("eu_member", str_replace, "0", "Non-member"),
+              across("party_fam", str_replace, "999", "NA"),
+              across("party_fam", str_replace, "98", "Diverse"),
+              across("party_fam", str_replace, "95", "Special Issue"),
+              across("party_fam", str_replace, "90", "Ethnic and Regional"),
+              across("party_fam", str_replace, "80", "Agrarian"),
+              across("party_fam", str_replace, "70", "Nationalist"),
+              across("party_fam", str_replace, "60", "Conservative"),
+              across("party_fam", str_replace, "50", "Religious Democratic"),
+              across("party_fam", str_replace, "40", "Liberal"),
+              across("party_fam", str_replace, "30", "Social Democratic"),
+              across("party_fam", str_replace, "20", "Leftist"),
+              across("party_fam", str_replace, "10", "Ecological"))
 
+#Final Glimpse
+glimpse(df8)
 
+#Save the tidier dataset as .rds and .csv files
+write_rds(df8,
+          "data/manifesto_tidy.rds")
+write_csv(df8,
+          "data/manifesto_tidy.csv")
