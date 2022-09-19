@@ -131,7 +131,7 @@ df8 <- mutate(df7, across("oecd_member", str_replace, "10", "Member"),
               across("party_fam", str_replace, "10", "Ecological"))
 
 #Glimpse once more
-glimpse(df9)
+glimpse(df8)
 
 #One Last Missed Removal
 df9 = subset(df8, select = -c(prog_type))
