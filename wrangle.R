@@ -139,11 +139,14 @@ df9 = subset(df8, select = -c(prog_type))
 #Correct typo
 df10 <- rename(df9, democracy = demcoracy)
 
+#Remove stray slashes in election_date
+df11 <- mutate(df10, election_date = str_replace_all(election_date, pattern = "\\\\", replacement = ""))
+
 #Final glimpse
-glimpse(df10)
+glimpse(df11)
 
 #Save the tidier dataset as .rds and .csv files
-write_rds(df10,
+write_rds(df11,
           "data/manifesto_tidy.rds")
-write_csv(df10,
+write_csv(df11,
           "data/manifesto_tidy.csv")
